@@ -1,0 +1,7 @@
+# Re-include project files for opencode/ripgrep-style readers.
+# Keep heavy build outputs ignored by default.
+!outputs
+!target
+!dev
+!.opencode
+!AGENTS.md

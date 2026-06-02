@@ -1,0 +1,16 @@
+# build output
+outputs
+target
+
+# macOS files
+.DS_Store
+
+# development files
+dev
+.opencode
+AGENTS.md
+
+# web viewer
+web/viewer/node_modules
+web/viewer/dist
+web/viewer/tsconfig.tsbuildinfo

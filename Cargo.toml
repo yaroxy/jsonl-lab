@@ -1,0 +1,11 @@
+[workspace]
+members = [
+    "crates/jsonl-core",
+    "crates/jsonl-cli",
+    "crates/jsonl-server",
+]
+resolver = "2"
+
+[workspace.package]
+edition = "2024"
+license = "MIT"
