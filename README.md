@@ -17,7 +17,10 @@ jsonl-lab serve data.jsonl --port 7860
 - Build line-offset indexes for JSONL files and access records by row index.
 - Read large files with mmap-backed random access instead of loading the full file.
 - Read single records, bounded ranges, and sampled structure summaries.
-- Serve JSONL records through a lightweight Axum HTTP API.
+- Choose between `serde` and `simd` JSON parsers with `--parser`.
+- Format output as pretty JSON, compact JSON, or raw JSONL with `--format`.
+- Write output to files with `--output`.
+- Serve JSONL records through a lightweight Axum HTTP API with compression.
 - Browse records in a React Web Viewer with index navigation and pretty JSON display.
 
 ## Quick Start
@@ -119,7 +122,19 @@ jsonl-lab get data.jsonl --idx 123
 Print the original JSONL line:
 
 ```bash
-jsonl-lab get data.jsonl --idx 123 --mode raw
+jsonl-lab get data.jsonl --idx 123 --format raw
+```
+
+Write to a file:
+
+```bash
+jsonl-lab get data.jsonl --idx 123 --output item.json
+```
+
+Use the SIMD parser:
+
+```bash
+jsonl-lab get data.jsonl --idx 123 --parser simd
 ```
 
 Use a custom index file:
@@ -130,10 +145,22 @@ jsonl-lab get data.jsonl --idx 123 --index data.idx
 
 ### range
 
-Read a bounded range of records:
+Read a bounded range of records. Pretty JSON array is the default:
 
 ```bash
 jsonl-lab range data.jsonl --start 100 --limit 20
+```
+
+Print raw JSONL lines:
+
+```bash
+jsonl-lab range data.jsonl --start 100 --limit 20 --format jsonl
+```
+
+Write to a file:
+
+```bash
+jsonl-lab range data.jsonl --start 100 --limit 20 --output rows.json
 ```
 
 ### inspect
@@ -153,7 +180,19 @@ jsonl-lab inspect data.jsonl --start 10000 --sample 1000
 Print the report as JSON:
 
 ```bash
-jsonl-lab inspect data.jsonl --json
+jsonl-lab inspect data.jsonl --format json
+```
+
+Write to a file:
+
+```bash
+jsonl-lab inspect data.jsonl --output inspect.json
+```
+
+Use the SIMD parser:
+
+```bash
+jsonl-lab inspect data.jsonl --parser simd
 ```
 
 ### serve
@@ -168,6 +207,12 @@ Allow access from other machines on the local network:
 
 ```bash
 jsonl-lab serve data.jsonl --host 0.0.0.0 --port 7860
+```
+
+Use the SIMD parser for all API requests:
+
+```bash
+jsonl-lab serve data.jsonl --parser simd
 ```
 
 ## Index Validity
@@ -198,6 +243,7 @@ Example requests:
 curl http://127.0.0.1:7860/api/meta
 curl http://127.0.0.1:7860/api/item/1
 curl 'http://127.0.0.1:7860/api/range?start=0&limit=2'
+curl 'http://127.0.0.1:7860/api/range-preview?start=0&limit=20&max_bytes=256'
 ```
 
 API overview:
@@ -207,6 +253,9 @@ API overview:
 | GET | `/api/meta` | Dataset metadata |
 | GET | `/api/item/{idx}` | Parsed JSON record by row index |
 | GET | `/api/range?start=0&limit=20` | Parsed JSON records in a bounded range |
+| GET | `/api/range-preview?start=0&limit=20&max_bytes=256` | Lightweight preview rows (truncated raw text) |
+
+The server enables HTTP compression (gzip/brotli) for all responses.
 
 ## Web Viewer
 

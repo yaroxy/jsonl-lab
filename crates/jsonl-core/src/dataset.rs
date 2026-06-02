@@ -1,3 +1,4 @@
+use crate::JsonParser;
 use anyhow::{Result, bail};
 use memmap2::Mmap;
 use serde_json::Value;
@@ -71,9 +72,12 @@ impl JsonlDataset {
     }
 
     pub fn json_value(&self, idx: usize) -> Result<Value> {
+        self.json_value_with(idx, JsonParser::default())
+    }
+
+    pub fn json_value_with(&self, idx: usize, parser: JsonParser) -> Result<Value> {
         let line = self.raw_line(idx)?;
-        let value = serde_json::from_slice(line)?;
-        Ok(value)
+        parser.parse(line)
     }
 
     pub fn range_raw(&self, start: usize, limit: usize) -> Result<Vec<String>> {

@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { AlertTriangle } from "lucide-react";
 import { startTransition, useEffect, useState } from "react";
-import { getItem, getMeta, getRange } from "./api";
+import { getItem, getMeta, getRangePreview } from "./api";
 import Navigator from "./components/Navigator";
 import RangeList from "./components/RangeList";
 import RecordViewer from "./components/RecordViewer";
@@ -32,8 +32,8 @@ export default function App() {
   });
 
   const rangeQuery = useQuery({
-    queryKey: ["range", rangeStart, RANGE_LIMIT],
-    queryFn: () => getRange(rangeStart, RANGE_LIMIT),
+    queryKey: ["range-preview", rangeStart, RANGE_LIMIT],
+    queryFn: () => getRangePreview(rangeStart, RANGE_LIMIT),
     enabled: hasRows,
   });
 

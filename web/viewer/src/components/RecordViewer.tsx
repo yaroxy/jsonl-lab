@@ -1,4 +1,4 @@
-import { JsonView, allExpanded, darkStyles } from "react-json-view-lite";
+import { JsonView, darkStyles } from "react-json-view-lite";
 import { AlertTriangle, Braces, RefreshCw } from "lucide-react";
 
 type RecordViewerProps = {
@@ -52,7 +52,7 @@ export default function RecordViewer({ idx, value, isLoading, error, onRefresh }
 
         {value !== undefined && !error ? (
           <div className="json-card">
-            <JsonView data={jsonViewData} shouldExpandNode={allExpanded} style={darkStyles} />
+            <JsonView data={jsonViewData} shouldExpandNode={shallowExpand} style={darkStyles} />
           </div>
         ) : null}
       </div>
@@ -70,4 +70,8 @@ function toJsonViewData(value: unknown): object | unknown[] {
   }
 
   return { value };
+}
+
+function shallowExpand(level: number) {
+  return level <= 2;
 }

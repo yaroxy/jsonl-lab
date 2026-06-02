@@ -1,7 +1,9 @@
 export type Meta = {
   path: string;
   file_size: number;
+  file_size_human: string;
   num_lines: number;
+  num_lines_human: string;
 };
 
 export type RangeRow = {
@@ -13,6 +15,18 @@ export type RangeResponse = {
   start: number;
   limit: number;
   rows: RangeRow[];
+};
+
+export type PreviewRow = {
+  idx: number;
+  byte_len: number;
+  preview: string;
+};
+
+export type PreviewResponse = {
+  start: number;
+  limit: number;
+  rows: PreviewRow[];
 };
 
 export class ApiError extends Error {
@@ -51,4 +65,14 @@ export function getRange(start: number, limit: number) {
   });
 
   return fetchJson<RangeResponse>(`/api/range?${params}`);
+}
+
+export function getRangePreview(start: number, limit: number) {
+  const params = new URLSearchParams({
+    start: String(start),
+    limit: String(limit),
+    max_bytes: "256",
+  });
+
+  return fetchJson<PreviewResponse>(`/api/range-preview?${params}`);
 }

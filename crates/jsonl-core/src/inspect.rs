@@ -1,4 +1,4 @@
-use crate::JsonlDataset;
+use crate::{JsonParser, JsonlDataset};
 use anyhow::Result;
 use serde::Serialize;
 use serde_json::Value;
@@ -28,6 +28,7 @@ pub fn inspect_dataset(
     dataset: &JsonlDataset,
     start: usize,
     sample: usize,
+    parser: JsonParser,
 ) -> Result<InspectReport> {
     let end = start.saturating_add(sample).min(dataset.len());
     let sample_size = end.saturating_sub(start);
@@ -48,7 +49,7 @@ pub fn inspect_dataset(
     for idx in start..end {
         let line = dataset.raw_line(idx)?;
 
-        match serde_json::from_slice::<Value>(line) {
+        match parser.parse(line) {
             Ok(value) => {
                 report.valid_json += 1;
 

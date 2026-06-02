@@ -1,9 +1,8 @@
 import { AlertTriangle, List } from "lucide-react";
-import type { RangeRow } from "../api";
-import { previewValue } from "../utils";
+import type { PreviewRow } from "../api";
 
 type RangeListProps = {
-  rows: RangeRow[];
+  rows: PreviewRow[];
   selectedIdx: number;
   isLoading: boolean;
   error: unknown;
@@ -45,7 +44,7 @@ export default function RangeList({ rows, selectedIdx, isLoading, error, onSelec
             type="button"
           >
             <span className="range-idx">#{row.idx}</span>
-            <span className="range-preview">{previewValue(row.value)}</span>
+            <span className="range-preview">{row.preview}</span>
           </button>
         ))}
       </div>
