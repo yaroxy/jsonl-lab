@@ -143,10 +143,11 @@ async fn range_preview(
             .raw_line(idx)
             .map_err(|e| (StatusCode::BAD_REQUEST, e.to_string()))?;
 
-        let line_str = String::from_utf8_lossy(line);
         let byte_len = line.len();
-        let truncated = if line_str.len() > max_bytes {
-            format!("{}...", &line_str[..max_bytes])
+        let line_str = String::from_utf8_lossy(line);
+        let safe_max = line_str.floor_char_boundary(max_bytes.min(line_str.len()));
+        let truncated = if line_str.len() > safe_max {
+            format!("{}...", &line_str[..safe_max])
         } else {
             line_str.to_string()
         };

@@ -40,7 +40,7 @@ pub fn format_duration(d: Duration) -> String {
     let total_secs = d.as_secs();
     let nanos = d.subsec_nanos();
 
-    if total_secs == 0 && nanos < 1_000_000 {
+    if total_secs == 0 && nanos < 1_000 {
         return format!("{} ns", nanos);
     }
 
